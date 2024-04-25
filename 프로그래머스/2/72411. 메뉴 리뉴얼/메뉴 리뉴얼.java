@@ -3,7 +3,7 @@ import java.util.*;
 
 class Solution {
     static int[] O, C, max;
-    static List<String>[] list;
+    static List<Integer>[] list;
     public String[] solution(String[] orders, int[] course) {
         max = new int[27];
         list = new ArrayList[27];
@@ -21,13 +21,19 @@ class Solution {
         recur(0,0, 0);
         
         int size = 0, idx = 0;
-        for(List<String> l : list)
+        for(List<Integer> l : list)
             size += l.size();
         
         String[] answer = new String[size];
-        for(List<String> l : list)
-            for(String str : l)
-                answer[idx++] = str;
+        for(List<Integer> l : list)
+            for(int bit : l) {
+                StringBuilder sb = new StringBuilder();
+                    for(int i = 0; i < 26; i++) {
+                        if(((bit >> i) & 1) == 1)
+                            sb.append((char)('A' + i));
+                }
+                answer[idx++] = sb.toString();
+            }
         Arrays.sort(answer);
         return answer;
     }
@@ -40,16 +46,11 @@ class Solution {
                         tmp++;
                 }
                 if(tmp >= 2 && max[cnt] <= tmp) {
-                    StringBuilder sb = new StringBuilder();
-                    for(int i = 0; i < 26; i++) {
-                        if(((bit >> i) & 1) == 1)
-                            sb.append((char)('A' + i));
-                    }
                     if(max[cnt] < tmp) {
                         max[cnt] = tmp;
                         list[cnt] = new ArrayList<>();
                     }
-                    list[cnt].add(sb.toString());
+                    list[cnt].add(bit);
                 }
                 if(c == C[C.length - 1])
                     return;
