@@ -18,7 +18,7 @@ class Solution {
             O[i] = bit;
         }
         System.out.println(26);
-        recur(0,0, 0);
+        recur(0, 0);
         
         int size = 0, idx = 0;
         for(List<Integer> l : list)
@@ -37,7 +37,8 @@ class Solution {
         Arrays.sort(answer);
         return answer;
     }
-    static void recur(int cnt, int start, int bit) {
+    static void recur(int start, int bit) {
+        int cnt = Integer.bitCount(bit);
         for(int c : C) {
             if(c == cnt) {
                 int tmp = 0;
@@ -58,6 +59,6 @@ class Solution {
             }
         }
         for(int i = start; i < 26; i++) 
-            recur(cnt + 1, i + 1, bit + (1 << i));
+            recur(i + 1, bit + (1 << i));
     }
 }
