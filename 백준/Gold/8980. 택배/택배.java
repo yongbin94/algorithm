@@ -3,12 +3,13 @@ import java.util.*;
 
 public class Main {
     static int N, C;
+    static int[] A;
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
         N = Integer.parseInt(st.nextToken());
         C = Integer.parseInt(st.nextToken());
-
+        A = new int[N + 1];
         PriorityQueue<Pacakge> input = new PriorityQueue<>();
         int M = Integer.parseInt(br.readLine());
         while(M-- > 0) {
@@ -19,21 +20,36 @@ public class Main {
             input.offer(new Pacakge(s, e, w));
         }
         int boxCnt = 0, answer = 0;
-        PriorityQueue<Delivery> pq = new PriorityQueue<>();
+        PriorityQueue<Integer> a = new PriorityQueue<>((o1, o2) -> o1 - o2);
+        PriorityQueue<Integer> b = new PriorityQueue<>((o1, o2) -> o2 - o1);
         while(!input.isEmpty()) {
             Pacakge p = input.poll();
-            while(!pq.isEmpty() && pq.peek().e <= p.s) {
-                Delivery d = pq.poll();
-                answer += d.w;
-                boxCnt -= d.w;
+            while(!a.isEmpty() && a.peek() <= p.s) {
+                int i = a.poll();
+                answer += A[i];
+                boxCnt -= A[i];
+                A[i] = 0;
             }
             int cnt = Math.min(p.w, C - boxCnt);
+            while(cnt != p.w && !b.isEmpty() && b.peek() > p.e) {
+                int i = b.poll();
+                int tmp = Math.min(C, Math.min(p.w, cnt + A[i])) - cnt;
+                if(A[i] - tmp != 0)
+                    b.offer(i);
+                A[i] -= tmp;
+                boxCnt -= tmp;
+                cnt += tmp;
+            }
             boxCnt += cnt;
-            pq.offer(new Delivery(p.e, cnt));
+            A[p.e] += cnt;
+            a.offer(p.e);
+            b.offer(p.e);
         }
-        while(!pq.isEmpty())
-            answer += pq.poll().w;
-
+        while(!a.isEmpty()) {
+            int i = a.poll();
+            answer += A[i];
+            A[i] = 0;
+        }
         System.out.println(answer);
     }
     private static class Pacakge implements Comparable<Pacakge> {
@@ -47,21 +63,7 @@ public class Main {
 
         @Override
         public int compareTo(Pacakge o) {
-            return this.e == o.e ? this.s - o.s : this.e - o.e;
-        }
-    }
-
-    private static class Delivery implements Comparable<Delivery> {
-        int e, w;
-
-        public Delivery(int e, int w) {
-            this.e = e;
-            this.w = w;
-        }
-
-        @Override
-        public int compareTo(Delivery o) {
-            return this.e - o.e;
+            return this.s == o.s ? this.e - o.e : this.s - o.s;
         }
     }
 }
