@@ -2,41 +2,44 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
-    static int L, N, K;
-    static int[] map;
+    static long L, N, K;
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
-        L = Integer.parseInt(st.nextToken());
+        L = Long.parseLong(st.nextToken());
         N = Integer.parseInt(st.nextToken());
         K = Integer.parseInt(st.nextToken());
-        map = new int[L + 1];
-        Arrays.fill(map, Integer.MAX_VALUE);
-        Queue<Integer> q = new ArrayDeque<>();
+        Set<Long> visited = new HashSet<>();
+        Queue<Long> q = new ArrayDeque<>();
         st = new StringTokenizer(br.readLine());
+        StringBuilder sb = new StringBuilder();
         while (st.hasMoreTokens()) {
-            int v = Integer.parseInt(st.nextToken());
-            map[v] = 0;
+            long v = Long.parseLong(st.nextToken());
+            visited.add(v);
             q.offer(v);
         }
+        int cnt = 0;
+        visited.add(-1L);
+        visited.add(L + 1L);
         while (!q.isEmpty()) {
-            int i = q.poll();
-            if (i > 0 && map[i - 1] > map[i] + 1) {
-                map[i - 1] = map[i] + 1;
-                q.offer(i - 1);
+            for (int n = 0, size = q.size(); n < size; n++) {
+                long i = q.poll();
+                sb.append(cnt).append("\n");
+                if (--K == 0) {
+                    System.out.println(sb);
+                    return;
+                }
+                if (!visited.contains(i - 1)) {
+                    visited.add(i - 1L);
+                    q.offer(i - 1L);
+                }
+                if (!visited.contains(i + 1)) {
+                    visited.add(i + 1L);
+                    q.offer(i + 1L);
+                }
             }
-            if (i < L && map[i + 1] > map[i] + 1) {
-                map[i + 1] = map[i] + 1;
-                q.offer(i + 1);
-            }
+            cnt++;
         }
-        PriorityQueue<Integer> pq = new PriorityQueue<>();
-        for (int v : map)
-            pq.offer(v);
-        StringBuilder sb = new StringBuilder();
-        while (K-- > 0)
-            sb.append(pq.poll()).append("\n");
-        System.out.println(sb);
     }
 }
