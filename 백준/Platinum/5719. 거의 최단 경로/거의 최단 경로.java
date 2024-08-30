@@ -4,7 +4,8 @@ import java.util.*;
 public class Main {
     static int N, M, S, E;
     static long[] memo;
-    static boolean[] mst, visited;
+    static boolean[] visited;
+    static Set<Integer> mst;
     static List<Integer>[] lists;
     static List<int[]>[] prev;
     static Edge[] edges;
@@ -20,7 +21,7 @@ public class Main {
             if (N == 0 && M == 0)
                 break;
             edges = new Edge[M];
-            mst = new boolean[M];
+            mst = new HashSet<>();
             visited = new boolean[N];
             lists = new ArrayList[N];
             prev = new ArrayList[N];
@@ -76,7 +77,7 @@ public class Main {
         while (!q.isEmpty()) {
             int s = q.poll();
             for (int[] arr : prev[s]) {
-                mst[arr[1]] = true;
+                mst.add(arr[1]);
                 if (visited[arr[0]])
                     continue;
                 visited[arr[0]] = true;
@@ -97,7 +98,7 @@ public class Main {
             for (int idx : lists[s.e]) {
                 Edge e = edges[idx];
                 long w = s.w + e.w;
-                if (memo[e.e] <= w || mst[idx])
+                if (memo[e.e] <= w || mst.contains(idx))
                     continue;
                 memo[e.e] = w;
                 pq.offer(new Edge(e.e, w));
