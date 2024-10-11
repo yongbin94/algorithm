@@ -6,12 +6,13 @@ class Solution {
         for (char ch : A) {
             if (ch >= 'A' && ch <= 'Z')
                 ch = (char) (ch - 'A' + 'a');
+            
             if (!(ch >= 'a' && ch <= 'z') && !(ch >= '0' && ch <= '9') && !(ch == '-' || ch == '_' || ch == '.'))
                 continue;
-            if(sb.length() != 0)
-                System.out.println(sb.length() + " " + sb.charAt(sb.length() - 1));
+            
             if(ch == '.'  && (sb.length() == 0 || sb.charAt(sb.length() - 1) == '.'))
                 continue;
+            
             sb.append(ch);
         }
         
