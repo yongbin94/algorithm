@@ -3,7 +3,7 @@ import java.util.*;
 
 public class Main {
     static int N, M;
-    static HashMap<List<Integer>, Integer> hashMap;
+    static HashMap<Long, Integer> hashMap;
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -18,6 +18,7 @@ public class Main {
             for (int m = 0; m < M; m++)
                 pq.offer(new Info(m, Integer.parseInt(st.nextToken())));
             int[] A = new int[M];
+            long hash = 0;
             int prev = pq.peek().v;
             int count = 0;
             while (!pq.isEmpty()) {
@@ -25,10 +26,11 @@ public class Main {
                 A[info.i] = prev == info.v ? count : ++count;
                 prev = info.v;
             }
-            List<Integer> list = Arrays.asList(Arrays.stream(A).boxed().toArray(Integer[]::new));
-            if (hashMap.containsKey(list))
-                answer += hashMap.get(list);
-            hashMap.put(list, hashMap.getOrDefault(list, 0) + 1);
+            for (int v : A)
+                hash = hash * 31 + v;
+            if (hashMap.containsKey(hash))
+                answer += hashMap.get(hash);
+            hashMap.put(hash, hashMap.getOrDefault(hash, 0) + 1);
         }
         System.out.println(answer);
     }
