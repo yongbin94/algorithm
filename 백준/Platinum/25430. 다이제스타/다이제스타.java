@@ -4,6 +4,7 @@ import java.util.*;
 public class Main {
     static int N, M, S, E;
     static long[] memo;
+    static boolean[][] visited;
     static List<Edge>[] list;
 
     public static void main(String[] args) throws IOException {
@@ -11,11 +12,10 @@ public class Main {
         StringTokenizer st = new StringTokenizer(br.readLine());
         N = Integer.parseInt(st.nextToken());
         M = Integer.parseInt(st.nextToken());
-        memo = new long[N + 1];
         list = new ArrayList[N + 1];
+        visited = new boolean[N + 1][N + 1];
         for (int i = 1; i <= N; i++)
             list[i] = new ArrayList<>();
-        Arrays.fill(memo, Long.MAX_VALUE);
         while (M-- > 0) {
             st = new StringTokenizer(br.readLine());
             int s = Integer.parseInt(st.nextToken());
@@ -33,23 +33,19 @@ public class Main {
     private static void solution() {
         PriorityQueue<Edge> pq = new PriorityQueue<>();
         pq.offer(new Edge(S, 0, 0));
-        memo[S] = 0;
         while (!pq.isEmpty()) {
             Edge s = pq.poll();
             if (s.e == E) {
                 System.out.println(s.w);
                 return;
             }
-            if (memo[s.e] < s.w)
-                continue;
             for (Edge e : list[s.e]) {
-                if (s.m >= e.w)
+                if (s.m >= e.w || visited[s.e][e.e])
                     continue;
+                visited[s.e][e.e] = true;
+                visited[e.e][s.e] = true;
                 long w = s.w + e.w;
-                if (memo[e.e] > w) {
-                    memo[e.e] = w;
-                    pq.offer(new Edge(e.e, e.w, w));
-                }
+                pq.offer(new Edge(e.e, e.w, w));
             }
         }
         System.out.println("DIGESTA");
@@ -57,7 +53,7 @@ public class Main {
 
     private static class Edge implements Comparable<Edge> {
         int e;
-        long m, w;
+        long w, m;
 
         public Edge(int e, long m, long w) {
             this.e = e;
