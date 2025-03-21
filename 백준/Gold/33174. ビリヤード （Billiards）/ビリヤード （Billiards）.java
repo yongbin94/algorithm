@@ -28,8 +28,8 @@ public class Main {
 			int p = Integer.parseInt(st.nextToken());
 			if (p == -1) {
                 if(A[n] > X) continue;
-				pq.offer(new Ball(n, 0));
-				dp[n] = 0;
+                pq.offer(new Ball(n, A[n]));
+                dp[n] = A[n];
 			} else {
 				L[p].add(n);
 			}
