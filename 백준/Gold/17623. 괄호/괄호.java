@@ -1,62 +1,46 @@
 import java.io.*;
-import java.util.*;
 
 public class Main {
+    static String[] dp;
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringBuilder sb = new StringBuilder();
+        init();
+
         int T = Integer.parseInt(br.readLine());
+        StringBuilder sb = new StringBuilder();
         while (T-- > 0) {
-            int N = Integer.parseInt(br.readLine());
-            long[] dp = new long[N + 1];
-            Arrays.fill(dp, Integer.MAX_VALUE);
-            dp[0] = 0;
-            dp[1] = 12;
-            dp[2] = 34;
-            dp[3] = 56;
-            dp[4] = 1256;
-            dp[5] = 3456;
-            for (int n = 6; n <= N; n++) {
-                for (int i = 1; i < n; i++) {
-                    dp[n] = Math.min(dp[n], concat(dp[i], dp[n - i]));
-                }
-                dp[n] = Math.min(dp[n], concat(val(1, dp[n / 2]), dp[n % 2]));
-                dp[n] = Math.min(dp[n], concat(dp[n % 2], val(1, dp[n / 2])));
-                dp[n] = Math.min(dp[n], concat(val(3, dp[n / 3]), dp[n % 3]));
-                dp[n] = Math.min(dp[n], concat(dp[n % 3], val(3, dp[n / 3])));
-                dp[n] = Math.min(dp[n], concat(val(5, dp[n / 5]), dp[n % 5]));
-                dp[n] = Math.min(dp[n], concat(dp[n % 5], val(5, dp[n / 5])));
-            }
-            sb.append(print(dp[N])).append("\n");
+            sb.append(dp[Integer.parseInt(br.readLine())]).append("\n");
         }
         System.out.println(sb);
     }
 
-    private static long concat(long a, long b) {
-        long t = 1;
-        while (t < b) t *= 10;
-        return a * t + b;
-    }
-
-    private static long val(int v, long n) {
-        long t = 1;
-        while (t < n) t *= 10;
-        return v * t * 10 + n * 10 + v + 1;
-    }
-
-    private static String print(long n) {
-        StringBuilder sb = new StringBuilder();
-        while (n > 0) {
-            switch ((int) (n % 10)) {
-                case 1: sb.append("("); break;
-                case 2: sb.append(")"); break;
-                case 3: sb.append("{"); break;
-                case 4: sb.append("}"); break;
-                case 5: sb.append("["); break;
-                case 6: sb.append("]"); break;
+    private static void init() {
+        int N = 1000;
+        dp = new String[N + 1];
+        dp[1] = "()";
+        dp[2] = "{}";
+        dp[3] = "[]";
+        for (int n = 4; n <= N; n++) {
+            dp[n] = dp[1] + dp[n - 1];
+            for (int i = 2; i < n; i++) {
+                dp[n] = min(dp[n], dp[i] + dp[n - i]);
             }
-            n /= 10;
+            if (n % 2 == 0) dp[n] = min(dp[n], "(" + dp[n / 2] + ")");
+            if (n % 3 == 0) dp[n] = min(dp[n], "{" + dp[n / 3] + "}");
+            if (n % 5 == 0) dp[n] = min(dp[n], "[" + dp[n / 5] + "]");
         }
-        return sb.reverse().toString();
+    }
+
+    static String order = "(){}[]";
+    private static String min(String a, String b) {
+        int aLen = a.length();
+        int bLen = b.length();
+        if (aLen == bLen) {
+            for (int i = 0; i < aLen; i++) {
+                if (a.charAt(i) == b.charAt(i)) continue;
+                return order.indexOf(a.charAt(i)) < order.indexOf(b.charAt(i)) ? a : b;
+            }
+        }
+        return aLen < bLen ? a : b;
     }
 }
