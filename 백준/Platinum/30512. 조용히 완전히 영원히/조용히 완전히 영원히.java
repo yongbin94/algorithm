@@ -71,7 +71,7 @@ public class Main {
 
         private void updateRange(int n, int s, int e, int l, int r, int v) {
             push(n, s, e);
-            if (s > r || e < l) return;
+            if (s > r || e < l || treeMax[n] <= v) return;
             if (s >= l && e <= r) {
                 lazyA[n] = v;
                 lazyT[n] = time;
