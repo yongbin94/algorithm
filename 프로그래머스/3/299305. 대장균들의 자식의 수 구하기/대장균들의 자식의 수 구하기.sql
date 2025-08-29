@@ -1,0 +1,7 @@
+SELECT a.ID,
+       COALESCE(COUNT(b.ID), 0) AS CHILD_COUNT
+FROM   ECOLI_DATA a
+       LEFT JOIN ECOLI_DATA b 
+              ON a.ID = b.PARENT_ID
+GROUP  BY a.ID
+ORDER  BY a.ID
