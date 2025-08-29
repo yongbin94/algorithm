@@ -1,0 +1,5 @@
+SELECT COUNT(*) AS COUNT
+FROM   ECOLI_DATA
+WHERE  NOT GENOTYPE >> 1 & 1
+       AND ((GENOTYPE >> 0) & 1
+         OR (GENOTYPE >> 2) & 1)
