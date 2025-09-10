@@ -2,20 +2,27 @@ import java.util.*;
 class Solution {
     public long solution(int n, int[] works) {
         long answer = 0;
-        int total = 0;
-        PriorityQueue<Integer> pq = new PriorityQueue<>((o1, o2) -> o2 - o1);
+        long[] A = new long[50001];
+        int i = 0;
         for (int a : works) {
-            pq.offer(a);
-            total += a;
+            A[a]++;
+            i = Math.max(i, a);
         }
-        if (total < n) return answer;
-        while (n-- > 0) {
-            int v = pq.poll() - 1;
-            if(v > 0) pq.offer(v);
+        int cnt = 0;
+        long sum = 0;
+        while (i >= 0) {
+            if (sum + cnt + A[i] > n) break;
+            cnt += A[i];
+            sum += cnt;
+            i--;
         }
-        while (!pq.isEmpty()) {
-            answer += Math.pow(pq.poll(), 2); 
-        }
+        if (i > 0) {
+            answer += (i - 1) * (i - 1) * (n - sum);
+            answer += i * i * (cnt + A[i] - (n - sum));
+            while (i-- > 0) {
+                answer += i * i * A[i];
+            }
+        }       
         return answer;
     }
 }

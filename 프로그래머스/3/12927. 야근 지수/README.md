@@ -1,10 +1,10 @@
 # [level 3] 야근 지수 - 12927 
 
-[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/12927) 
+[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/12927#) 
 
 ### 성능 요약
 
-메모리: 70.3 MB, 시간: 116.37 ms
+메모리: 54.2 MB, 시간: 1.35 ms
 
 ### 구분
 
@@ -16,7 +16,7 @@
 
 ### 제출 일자
 
-2025년 09월 10일 16:08:58
+2025년 09월 10일 16:10:54
 
 ### 문제 설명
 
