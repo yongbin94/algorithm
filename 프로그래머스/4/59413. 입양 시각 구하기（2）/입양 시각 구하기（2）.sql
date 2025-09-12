@@ -1,0 +1,13 @@
+SELECT HOUR,
+       NVL(COUNT, 0) AS COUNT
+FROM   (
+        SELECT  LEVEL-1 AS HOUR
+        FROM    DUAL
+        CONNECT BY LEVEL <= 24
+       ) LEFT JOIN (
+            SELECT TO_NUMBER(TO_CHAR(DATETIME, 'HH24')) AS HOUR,
+                   COUNT(*) AS COUNT
+            FROM   ANIMAL_OUTS
+            GROUP  BY TO_NUMBER(TO_CHAR(DATETIME, 'HH24'))
+       ) USING(HOUR)
+ORDER  BY HOUR
