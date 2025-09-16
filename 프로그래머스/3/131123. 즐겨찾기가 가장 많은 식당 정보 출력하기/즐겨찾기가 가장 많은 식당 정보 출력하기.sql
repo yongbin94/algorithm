@@ -1,0 +1,13 @@
+SELECT FOOD_TYPE,
+       REST_ID,
+       REST_NAME,
+       FAVORITES
+FROM   REST_INFO
+       JOIN (
+           SELECT FOOD_TYPE,
+                  MAX(FAVORITES) AS MAX
+           FROM   REST_INFO
+           GROUP  BY FOOD_TYPE
+       ) USING(FOOD_TYPE)
+WHERE  FAVORITES = MAX
+ORDER  BY FOOD_TYPE DESC
